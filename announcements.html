@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Announcements</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="js/api.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/announcements.js" defer></script>
+</head>
+<body class="bg-white text-gray-800 min-h-screen">
+  <header class="bg-blue-600 text-white p-4">
+    <div class="container mx-auto flex justify-between">
+      <a href="index.html" class="text-lg font-semibold">Dept Board</a>
+      <div>
+        <a href="events.html" class="mr-4">Events</a>
+        <a href="login.html" id="loginLink">Login</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto p-6">
+    <div id="adminControls" class="hidden mb-4">
+      <h3 class="text-xl font-semibold text-blue-700">Create Announcement</h3>
+      <form id="createForm" class="mt-2 space-y-2">
+        <input id="aTitle" class="w-full p-2 border rounded" placeholder="Title" required />
+        <textarea id="aContent" class="w-full p-2 border rounded" placeholder="Content" rows="4" required></textarea>
+        <div>
+          <button class="px-3 py-2 bg-blue-600 text-white rounded">Create</button>
+        </div>
+      </form>
+    </div>
+
+    <section>
+      <h2 class="text-2xl font-bold mb-3">Announcements</h2>
+      <div id="list" class="space-y-4"></div>
+    </section>
+  </main>
+
+  <script>
+    // small styling helper for gold button, minimal inline
+    const goldStyle = "background:#D4AF37;color:white;padding:.5rem 1rem;border-radius:.375rem";
+  </script>
+</body>
+</html>

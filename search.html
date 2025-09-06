@@ -2,28 +2,301 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Search</title>
+  <title>Search | Software Engineering Department</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-blue': '#1e40af',
+            'dark-blue': '#1e3a8a', 
+            'gold': '#fbbf24',
+            'dark-gold': '#f59e0b'
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Preserve existing JavaScript connections -->
   <script src="js/api.js" defer></script>
   <script src="js/search.js" defer></script>
 </head>
-<body class="bg-white text-gray-800 min-h-screen">
-  <header class="bg-blue-600 text-white p-4">
-    <div class="container mx-auto">Search</div>
+
+<body class="bg-white text-gray-800 min-h-screen font-inter flex flex-col">
+  <!-- Consistent Navigation Header -->
+  <header class="bg-dark-blue text-white p-4 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="index.html" class="text-xl font-bold text-gold hover:text-white transition-colors">Software Engineering Dept. | FUTO</a>
+      <nav class="hidden md:flex space-x-6">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="announcements.html" class="nav-link">Announcements</a>
+        <a href="events.html" class="nav-link">Events</a>
+        <a href="archive.html" class="nav-link">Archives</a>
+        <a href="search.html" class="nav-link text-gold font-semibold">Search</a>
+        <a href="staff.html" class="nav-link">Staff</a>
+      </nav>
+      <!-- Mobile menu button -->
+      <button class="md:hidden btn-spin text-gold" onclick="toggleMobileMenu()">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="md:hidden hidden mt-4 space-y-2">
+      <a href="index.html" class="block nav-link py-2">Home</a>
+      <a href="announcements.html" class="block nav-link py-2">Announcements</a>
+      <a href="events.html" class="block nav-link py-2">Events</a>
+      <a href="archive.html" class="block nav-link py-2">Archives</a>
+      <a href="search.html" class="block nav-link text-gold font-semibold py-2">Search</a>
+      <a href="staff.html" class="block nav-link py-2">Staff</a>
+    </div>
   </header>
 
-  <main class="container mx-auto p-6">
-    <form id="searchForm" class="mb-4 space-y-2">
-      <input id="keyword" class="w-full p-2 border rounded" placeholder="Keyword" />
-      <div class="flex gap-2">
-        <input id="startDate" type="date" class="p-2 border rounded" />
-        <input id="endDate" type="date" class="p-2 border rounded" />
-      </div>
-      <button class="px-3 py-2 bg-blue-600 text-white rounded">Search</button>
-    </form>
+  <!-- Back Button -->
+  <div class="container mx-auto px-6 pt-6">
+    <a href="index.html" class="back-btn btn-spin">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+      Back to Home
+    </a>
+  </div>
 
-    <div id="results" class="space-y-4"></div>
+  <!-- Main Content -->
+  <main class="container mx-auto p-6 flex-1">
+    <!-- Page Header -->
+    <div class="text-center mb-8">
+      <h1 class="section-heading text-primary-blue">Search Department Content</h1>
+      <p class="text-gray-700 text-lg">Find announcements, events, and archived content</p>
+    </div>
+
+    <!-- Search Form (preserve existing functionality) -->
+    <div class="max-w-2xl mx-auto mb-8">
+      <div class="card">
+        <form id="searchForm" class="space-y-6">
+          <div class="form-group">
+            <label class="form-label" for="keyword">
+              <svg class="w-4 h-4 inline mr-2 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              Search Keywords
+            </label>
+            <input 
+              id="keyword" 
+              class="form-input" 
+              type="text"
+              placeholder="Enter keywords to search for..." 
+            />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label class="form-label" for="startDate">
+                <svg class="w-4 h-4 inline mr-2 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h.757l1.707-1.707A1 1 0 0120 6.828V17a1 1 0 01-1 1H5a1 1 0 01-1-1V6.828a1 1 0 01.536-.894L6.243 7H8z"></path>
+                </svg>
+                Start Date
+              </label>
+              <input id="startDate" type="date" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="endDate">
+                <svg class="w-4 h-4 inline mr-2 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h.757l1.707-1.707A1 1 0 0120 6.828V17a1 1 0 01-1-1H5a1 1 0 01-1-1V6.828a1 1 0 01.536-.894L6.243 7H8z"></path>
+                </svg>
+                End Date
+              </label>
+              <input id="endDate" type="date" class="form-input" />
+            </div>
+          </div>
+
+          <!-- Search Filters -->
+          <div class="form-group">
+            <label class="form-label">Content Types</label>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+              <label class="flex items-center">
+                <input type="checkbox" class="w-4 h-4 text-gold bg-gray-100 border-gray-300 rounded focus:ring-gold focus:ring-2" checked>
+                <span class="ml-2 text-sm text-gray-700">Announcements</span>
+              </label>
+              <label class="flex items-center">
+                <input type="checkbox" class="w-4 h-4 text-gold bg-gray-100 border-gray-300 rounded focus:ring-gold focus:ring-2" checked>
+                <span class="ml-2 text-sm text-gray-700">Events</span>
+              </label>
+              <label class="flex items-center">
+                <input type="checkbox" class="w-4 h-4 text-gold bg-gray-100 border-gray-300 rounded focus:ring-gold focus:ring-2" checked>
+                <span class="ml-2 text-sm text-gray-700">Archives</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="flex justify-center">
+            <button type="submit" class="btn btn-spin">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              Search Content
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Search Results Section -->
+    <section class="max-w-4xl mx-auto">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-primary-blue flex items-center">
+          <svg class="w-6 h-6 mr-2 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v8a2 2 0 002 2h5.586a1 1 0 00.707-.293l5.414-5.414a1 1 0 00.293-.707V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+          </svg>
+          Search Results
+        </h2>
+        <div class="loading hidden" id="loadingSpinner"></div>
+      </div>
+      
+      <!-- Results will be populated by JavaScript -->
+      <div id="results" class="space-y-6">
+        <!-- Initial state message -->
+        <div id="initialState" class="text-center py-16">
+          <svg class="w-20 h-20 mx-auto text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          <h3 class="text-xl font-semibold text-gray-500 mb-3">Ready to Search</h3>
+          <p class="text-gray-400 text-lg">Enter your search criteria above to find relevant content.</p>
+        </div>
+
+        <!-- No results state -->
+        <div id="noResults" class="hidden text-center py-16">
+          <svg class="w-20 h-20 mx-auto text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.464-.881-6.08-2.33C5.54 12.123 5 11.438 5 10.5V7a2 2 0 012-2h10a2 2 0 012 2v3.5c0 .938-.54 1.623-.92 2.17A7.962 7.962 0 0112 15z"></path>
+          </svg>
+          <h3 class="text-xl font-semibold text-gray-500 mb-3">No Results Found</h3>
+          <p class="text-gray-400 text-lg">Try adjusting your search criteria or keywords.</p>
+        </div>
+
+        <!-- Loading state -->
+        <div id="searchingState" class="hidden text-center py-12">
+          <div class="loading mx-auto mb-4"></div>
+          <p class="text-gray-500">Searching content...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Search Tips -->
+    <div class="mt-12 max-w-4xl mx-auto">
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-primary-blue mb-4 flex items-center">
+          <svg class="w-5 h-5 mr-2 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          Search Tips
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+          <div>
+            <h4 class="font-semibold text-gray-800 mb-2">Keywords</h4>
+            <ul class="space-y-1">
+              <li>• Use specific terms for better results</li>
+              <li>• Try different word combinations</li>
+              <li>• Use quotation marks for exact phrases</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-800 mb-2">Date Filters</h4>
+            <ul class="space-y-1">
+              <li>• Leave dates empty to search all content</li>
+              <li>• Use date range to narrow results</li>
+              <li>• Recent content appears first</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
+
+  <!-- Footer -->
+  <footer class="bg-dark-blue text-white py-8 mt-auto">
+    <div class="container mx-auto px-6 text-center">
+      <div class="mb-4">
+        <h4 class="text-xl font-bold text-gold mb-2">Software Engineering Department</h4>
+        <p class="text-sm opacity-90">Federal University of Technology Owerri</p>
+      </div>
+      <div class="border-t border-blue-700 pt-4">
+        <p class="text-sm">&copy; 2025 Software Engineering Dept., FUTO. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle function
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    // Search state management
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchForm = document.getElementById('searchForm');
+      const resultsContainer = document.getElementById('results');
+      const initialState = document.getElementById('initialState');
+      const noResults = document.getElementById('noResults');
+      const searchingState = document.getElementById('searchingState');
+
+      // Helper functions for JavaScript integration
+      window.showSearchingState = function() {
+        initialState.classList.add('hidden');
+        noResults.classList.add('hidden');
+        searchingState.classList.remove('hidden');
+      };
+
+      window.showNoResults = function() {
+        initialState.classList.add('hidden');
+        searchingState.classList.add('hidden');
+        noResults.classList.remove('hidden');
+      };
+
+      window.showResults = function() {
+        initialState.classList.add('hidden');
+        searchingState.classList.add('hidden');
+        noResults.classList.add('hidden');
+      };
+
+      window.resetSearchState = function() {
+        searchingState.classList.add('hidden');
+        noResults.classList.add('hidden');
+        initialState.classList.remove('hidden');
+      };
+
+      // Form submission enhancement
+      searchForm.addEventListener('submit', function(e) {
+        // Your existing search.js will handle the actual search
+        // This provides visual feedback
+        const submitButton = searchForm.querySelector('button[type="submit"]');
+        submitButton.innerHTML = `
+          <div class="loading mr-2"></div>
+          Searching...
+        `;
+        submitButton.disabled = true;
+        
+        // Show searching state
+        showSearchingState();
+        
+        // Re-enable button after a timeout (your search.js should handle this)
+        setTimeout(() => {
+          submitButton.innerHTML = `
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            Search Content
+          `;
+          submitButton.disabled = false;
+        }, 2000);
+      });
+    });
+  </script>
 </body>
 </html>

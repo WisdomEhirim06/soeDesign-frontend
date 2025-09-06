@@ -2,42 +2,221 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Events</title>
+  <title>Events | Software Engineering Department</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-blue': '#1e40af',
+            'dark-blue': '#1e3a8a', 
+            'gold': '#fbbf24',
+            'dark-gold': '#f59e0b'
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Preserve all existing JavaScript connections -->
   <script src="js/api.js" defer></script>
   <script src="js/auth.js" defer></script>
   <script src="js/events.js" defer></script>
 </head>
-<body class="bg-white text-gray-800 min-h-screen">
-  <header class="bg-blue-600 text-white p-4">
-    <div class="container mx-auto flex justify-between">
-      <a href="index.html" class="text-lg font-semibold">Dept Board</a>
-      <nav>
-        <a href="announcements.html" class="mr-4">Announcements</a>
-        <a href="login.html" id="loginLink">Login</a>
+
+<body class="bg-white text-gray-800 min-h-screen font-inter flex flex-col">
+  <!-- Consistent Navigation Header -->
+  <header class="bg-dark-blue text-white p-4 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="index.html" class="text-xl font-bold text-gold hover:text-white transition-colors">Software Engineering Dept. | FUTO</a>
+      <nav class="hidden md:flex space-x-6">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="announcements.html" class="nav-link">Announcements</a>
+        <a href="events.html" class="nav-link text-gold font-semibold">Events</a>
+        <a href="archive.html" class="nav-link">Archives</a>
+        <a href="search.html" class="nav-link">Search</a>
+        <a href="staff.html" class="nav-link">Staff</a>
+        <a href="login.html" id="loginLink" class="nav-link">Login</a>
       </nav>
+      <!-- Mobile menu button -->
+      <button class="md:hidden btn-spin text-gold" onclick="toggleMobileMenu()">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="md:hidden hidden mt-4 space-y-2">
+      <a href="index.html" class="block nav-link py-2">Home</a>
+      <a href="announcements.html" class="block nav-link py-2">Announcements</a>
+      <a href="events.html" class="block nav-link text-gold font-semibold py-2">Events</a>
+      <a href="archive.html" class="block nav-link py-2">Archives</a>
+      <a href="search.html" class="block nav-link py-2">Search</a>
+      <a href="staff.html" class="block nav-link py-2">Staff</a>
+      <a href="login.html" id="loginLinkMobile" class="block nav-link py-2">Login</a>
     </div>
   </header>
 
-  <main class="container mx-auto p-6">
-    <div id="adminControls" class="hidden mb-6">
-      <h3 class="text-xl font-semibold text-blue-700">Create Event</h3>
-      <form id="eventForm" class="mt-2 space-y-2">
-        <input id="eTitle" class="w-full p-2 border rounded" placeholder="Title" required />
-        <textarea id="eDesc" class="w-full p-2 border rounded" placeholder="Description" rows="3" required></textarea>
-        <input id="eDate" type="date" class="p-2 border rounded" required />
-        <input id="eImage" type="file" accept="image/*" class="p-2" />
-        <div>
-          <button class="px-3 py-2 bg-blue-600 text-white rounded">Create Event</button>
-        </div>
-      </form>
+  <!-- Back Button -->
+  <div class="container mx-auto px-6 pt-6">
+    <a href="index.html" class="back-btn btn-spin">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+      Back to Home
+    </a>
+  </div>
+
+  <!-- Main Content -->
+  <main class="container mx-auto p-6 flex-1">
+    <!-- Page Header -->
+    <div class="text-center mb-8">
+      <h1 class="section-heading text-primary-blue">Department Events</h1>
+      <p class="text-gray-700 text-lg">Discover upcoming events, workshops, and activities in our department</p>
     </div>
 
-    <section>
-      <h2 class="text-2xl font-bold mb-3">Events</h2>
-      <div id="eventsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    <!-- Admin Controls (preserve existing functionality) -->
+    <div id="adminControls" class="hidden mb-8">
+      <div class="card max-w-2xl mx-auto">
+        <h3 class="text-xl font-semibold text-primary-blue mb-4 flex items-center">
+          <svg class="w-6 h-6 mr-2 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h.757l1.707-1.707A1 1 0 0120 6.828V17a1 1 0 01-1 1H5a1 1 0 01-1-1V6.828a1 1 0 01.536-.894L6.243 7H8z"></path>
+          </svg>
+          Create New Event
+        </h3>
+        <form id="eventForm" class="space-y-4">
+          <div class="form-group">
+            <label class="form-label" for="eTitle">Event Title</label>
+            <input id="eTitle" class="form-input" placeholder="Enter event title" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="eDesc">Event Description</label>
+            <textarea id="eDesc" class="form-textarea" placeholder="Describe the event details" rows="4" required></textarea>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label class="form-label" for="eDate">Event Date</label>
+              <input id="eDate" type="date" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="eImage">Event Image (optional)</label>
+              <input id="eImage" type="file" accept="image/*" class="form-input file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:bg-gold file:text-primary-blue hover:file:bg-dark-gold" />
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <button type="submit" class="btn btn-spin">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h.757l1.707-1.707A1 1 0 0120 6.828V17a1 1 0 01-1-1H5a1 1 0 01-1-1V6.828a1 1 0 01.536-.894L6.243 7H8z"></path>
+              </svg>
+              Create Event
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Events List Section -->
+    <section class="max-w-6xl mx-auto">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-primary-blue flex items-center">
+          <svg class="w-6 h-6 mr-2 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h.757l1.707-1.707A1 1 0 0120 6.828V17a1 1 0 01-1-1H5a1 1 0 01-1-1V6.828a1 1 0 01.536-.894L6.243 7H8z"></path>
+          </svg>
+          Upcoming Events
+        </h2>
+        <div class="loading hidden" id="loadingSpinner"></div>
+      </div>
+      
+      <!-- Events will be populated by JavaScript -->
+      <div id="eventsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Loading placeholder -->
+        <div id="loadingPlaceholder" class="col-span-full text-center py-12">
+          <div class="loading mx-auto mb-4"></div>
+          <p class="text-gray-500">Loading events...</p>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div id="emptyState" class="hidden col-span-full text-center py-16">
+        <svg class="w-20 h-20 mx-auto text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h.757l1.707-1.707A1 1 0 0120 6.828V17a1 1 0 01-1-1H5a1 1 0 01-1-1V6.828a1 1 0 01.536-.894L6.243 7H8z"></path>
+        </svg>
+        <h3 class="text-xl font-semibold text-gray-500 mb-3">No events scheduled</h3>
+        <p class="text-gray-400 text-lg">Stay tuned for exciting upcoming events and activities!</p>
+      </div>
     </section>
+
+    <!-- Event Categories Filter (Optional Enhancement) -->
+    <div class="mt-12 max-w-6xl mx-auto">
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-primary-blue mb-4">Event Categories</h3>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-4 py-2 bg-white border border-gold rounded-full text-sm text-primary-blue hover:bg-gold hover:text-white cursor-pointer transition-colors">All Events</span>
+          <span class="px-4 py-2 bg-white border border-gray-300 rounded-full text-sm text-gray-700 hover:bg-gold hover:text-white hover:border-gold cursor-pointer transition-colors">Workshops</span>
+          <span class="px-4 py-2 bg-white border border-gray-300 rounded-full text-sm text-gray-700 hover:bg-gold hover:text-white hover:border-gold cursor-pointer transition-colors">Seminars</span>
+          <span class="px-4 py-2 bg-white border border-gray-300 rounded-full text-sm text-gray-700 hover:bg-gold hover:text-white hover:border-gold cursor-pointer transition-colors">Conferences</span>
+          <span class="px-4 py-2 bg-white border border-gray-300 rounded-full text-sm text-gray-700 hover:bg-gold hover:text-white hover:border-gold cursor-pointer transition-colors">Student Activities</span>
+        </div>
+      </div>
+    </div>
   </main>
+
+  <!-- Footer -->
+  <footer class="bg-dark-blue text-white py-8 mt-auto">
+    <div class="container mx-auto px-6 text-center">
+      <div class="mb-4">
+        <h4 class="text-xl font-bold text-gold mb-2">Software Engineering Department</h4>
+        <p class="text-sm opacity-90">Federal University of Technology Owerri</p>
+      </div>
+      <div class="border-t border-blue-700 pt-4">
+        <p class="text-sm">&copy; 2025 Software Engineering Dept., FUTO. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle function
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    // Helper functions for JavaScript integration
+    document.addEventListener('DOMContentLoaded', function() {
+      // Hide loading placeholder when content loads
+      window.hideLoadingPlaceholder = function() {
+        document.getElementById('loadingPlaceholder').style.display = 'none';
+      };
+      
+      // Show empty state if no events
+      window.showEmptyState = function() {
+        document.getElementById('emptyState').classList.remove('hidden');
+      };
+
+      // Category filter functionality (optional enhancement)
+      const categoryButtons = document.querySelectorAll('[class*="cursor-pointer"]');
+      categoryButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // Remove active state from all buttons
+          categoryButtons.forEach(btn => {
+            btn.classList.remove('bg-gold', 'text-white', 'border-gold');
+            btn.classList.add('bg-white', 'border-gray-300', 'text-gray-700');
+          });
+          
+          // Add active state to clicked button
+          this.classList.remove('bg-white', 'border-gray-300', 'text-gray-700');
+          this.classList.add('bg-gold', 'text-white', 'border-gold');
+          
+          // You can add filter logic here that integrates with your existing events.js
+          const category = this.textContent.trim();
+          // Example: filterEventsByCategory(category);
+        });
+      });
+    });
+  </script>
 </body>
 </html>

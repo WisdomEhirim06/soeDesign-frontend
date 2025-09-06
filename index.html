@@ -2,91 +2,141 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Software Engineering Department | FUTO</title>
-  <link href="css/styles.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-blue': '#1e40af',
+            'dark-blue': '#1e3a8a', 
+            'gold': '#fbbf24',
+            'dark-gold': '#f59e0b'
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body class="bg-white text-gray-800 font-sans">
+<body class="bg-white text-gray-800 font-inter min-h-screen flex flex-col">
 
   <!-- Navbar -->
-  <nav class="bg-blue-800 text-white p-4 flex justify-between items-center shadow-lg">
-    <h1 class="text-xl font-bold text-gold">Software Engineering Dept. | FUTO</h1>
-    <div class="space-x-6">
-      <a href="index.html" class="hover:text-gold">Home</a>
-      <a href="announcements.html" class="hover:text-gold">Announcements</a>
-      <a href="events.html" class="hover:text-gold">Events</a>
-      <a href="archive.html" class="hover:text-gold">Archives</a>
-      <a href="search.html" class="hover:text-gold">Search</a>
-      <a href="staff.html" class="hover:text-gold">Staff</a>
+  <nav class="bg-dark-blue text-white p-4 shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold text-gold">Software Engineering Dept. | FUTO</h1>
+      <div class="hidden md:flex space-x-6">
+        <a href="index.html" class="nav-link text-gold font-semibold">Home</a>
+        <a href="announcements.html" class="nav-link">Announcements</a>
+        <a href="events.html" class="nav-link">Events</a>
+        <a href="archive.html" class="nav-link">Archives</a>
+        <a href="search.html" class="nav-link">Search</a>
+        <a href="staff.html" class="nav-link">Staff</a>
+      </div>
+      <!-- Mobile menu button -->
+      <button class="md:hidden btn-spin" onclick="toggleMobileMenu()">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="md:hidden hidden mt-4 space-y-2">
+      <a href="index.html" class="block nav-link text-gold font-semibold py-2">Home</a>
+      <a href="announcements.html" class="block nav-link py-2">Announcements</a>
+      <a href="events.html" class="block nav-link py-2">Events</a>
+      <a href="archive.html" class="block nav-link py-2">Archives</a>
+      <a href="search.html" class="block nav-link py-2">Search</a>
+      <a href="staff.html" class="block nav-link py-2">Staff</a>
     </div>
   </nav>
 
   <!-- Hero Section -->
-  <section class="relative h-[500px] flex items-center justify-center bg-gray-100">
+  <section class="hero-section relative h-[500px] md:h-[600px] flex items-center justify-center bg-gray-100">
     <img src="images/department-banner.jpg" alt="Department Banner" class="absolute inset-0 w-full h-full object-cover">
-    <div class="absolute inset-0 bg-blue-900 bg-opacity-50"></div>
-    <div class="relative text-center text-white">
-      <h2 class="text-4xl md:text-5xl font-bold mb-4">Software Engineering Department</h2>
-      <p class="text-lg md:text-xl">School of ICT | Federal University of Technology Owerri</p>
+    <div class="absolute inset-0 bg-dark-blue bg-opacity-60"></div>
+    <div class="relative text-center text-white px-4 max-w-4xl mx-auto">
+      <h2 class="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 text-gold">Software Engineering Department</h2>
+      <p class="text-lg md:text-xl lg:text-2xl mb-8">School of ICT | Federal University of Technology Owerri</p>
+      <button class="btn btn-primary btn-spin" onclick="scrollToAbout()">Learn More About Us</button>
     </div>
   </section>
 
   <!-- About Section -->
-  <section class="max-w-6xl mx-auto my-12 px-6 text-center">
-    <h3 class="text-3xl font-semibold text-blue-900 mb-4">About Us</h3>
-    <p class="text-gray-700 leading-relaxed">
-      The Department of Software Engineering, School of Information and Communication Technology, 
-      Federal University of Technology Owerri, is committed to producing world-class software engineers 
-      equipped with knowledge, innovation, and practical problem-solving skills.
-    </p>
+  <section id="about" class="section-padding max-w-6xl mx-auto px-6 text-center">
+    <h3 class="section-heading">About Us</h3>
+    <div class="content-wrapper">
+      <p class="text-gray-700 text-lg leading-relaxed max-w-4xl mx-auto">
+        The Department of Software Engineering, School of Information and Communication Technology, 
+        Federal University of Technology Owerri, is committed to producing world-class software engineers 
+        equipped with knowledge, innovation, and practical problem-solving skills.
+      </p>
+    </div>
   </section>
 
   <!-- Vision & Mission -->
-  <section class="bg-gray-50 py-12">
-    <h3 class="text-center text-3xl font-semibold text-blue-900 mb-8">Our Vision & Mission</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto px-6">
-      <div class="p-6 border-2 border-gold rounded-xl shadow-md hover:shadow-lg transition card">
-        <h4 class="text-xl font-bold text-blue-800 mb-2">Vision</h4>
-        <p class="text-gray-700">
-          To be a leading hub for software innovation, research, and education in Africa, 
-          preparing graduates to shape the digital future.
-        </p>
-      </div>
-      <div class="p-6 border-2 border-gold rounded-xl shadow-md hover:shadow-lg transition card">
-        <h4 class="text-xl font-bold text-blue-800 mb-2">Mission</h4>
-        <p class="text-gray-700">
-          To train highly skilled software engineers with a balance of theory, practice, 
-          and ethical responsibility to solve global challenges.
-        </p>
+  <section class="bg-gray-50 section-padding">
+    <div class="max-w-6xl mx-auto px-6">
+      <h3 class="section-heading text-center mb-12">Our Vision & Mission</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="card">
+          <h4 class="text-xl font-bold text-primary-blue mb-4">Vision</h4>
+          <p class="text-gray-700">
+            To be a leading hub for software innovation, research, and education in Africa, 
+            preparing graduates to shape the digital future.
+          </p>
+        </div>
+        <div class="card">
+          <h4 class="text-xl font-bold text-primary-blue mb-4">Mission</h4>
+          <p class="text-gray-700">
+            To train highly skilled software engineers with a balance of theory, practice, 
+            and ethical responsibility to solve global challenges.
+          </p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Founded Year -->
-  <section class="max-w-6xl mx-auto my-16 px-6 text-center">
-    <h3 class="text-3xl font-semibold text-blue-900 mb-4">Our History</h3>
-    <p class="text-lg text-gray-700">Established in <span class="text-gold font-bold">20XX</span>, the department has been 
-    at the forefront of advancing computing education and innovation in Nigeria.</p>
+  <section class="section-padding max-w-6xl mx-auto px-6 text-center">
+    <h3 class="section-heading">Our History</h3>
+    <div class="content-wrapper">
+      <p class="text-lg text-gray-700">
+        Established in <span class="text-gold font-bold text-xl">20XX</span>, the department has been 
+        at the forefront of advancing computing education and innovation in Nigeria.
+      </p>
+    </div>
   </section>
 
   <!-- Gallery -->
-  <section class="bg-gray-50 py-12">
-    <h3 class="text-center text-3xl font-semibold text-blue-900 mb-8">Gallery</h3>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto px-6">
-      <img src="images/gallery1.jpg" alt="Campus" class="rounded-lg shadow-md hover:scale-105 transition">
-      <img src="images/gallery2.jpg" alt="Department Building" class="rounded-lg shadow-md hover:scale-105 transition">
-      <img src="images/gallery3.jpg" alt="Students" class="rounded-lg shadow-md hover:scale-105 transition">
+  <section class="bg-gray-50 section-padding">
+    <div class="max-w-6xl mx-auto px-6">
+      <h3 class="section-heading text-center mb-12">Gallery</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="gallery-item">
+          <img src="images/gallery1.jpg" alt="Campus" class="w-full h-64 object-cover rounded-lg shadow-md">
+        </div>
+        <div class="gallery-item">
+          <img src="images/gallery2.jpg" alt="Department Building" class="w-full h-64 object-cover rounded-lg shadow-md">
+        </div>
+        <div class="gallery-item">
+          <img src="images/gallery3.jpg" alt="Students" class="w-full h-64 object-cover rounded-lg shadow-md">
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- Google Map -->
-  <section class="my-12 max-w-6xl mx-auto px-6">
-    <h3 class="text-3xl font-semibold text-blue-900 mb-4 text-center">Our Location</h3>
-    <div class="w-full h-96 border-2 border-gold rounded-lg shadow-md overflow-hidden">
+  <section class="section-padding max-w-6xl mx-auto px-6">
+    <h3 class="section-heading text-center mb-8">Our Location</h3>
+    <div class="map-container">
       <iframe 
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3971.5930461072123!2d7.372897074098653!3d5.379550836262767!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10425850968a4d91%3A0xbb0890a27e18d1b7!2sFederal%20University%20of%20Technology%20Owerri!5e0!3m2!1sen!2sng!4v1695143557201!5m2!1sen!2sng" 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15888.934867796252!2d6.970881974290025!3d5.381297422513621!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10425d8dfe553499%3A0xec9c3a521f187a5b!2sSchool%20of%20Computing%20and%20Information%20Technology!5e0!3m2!1sen!2sng!4v1757192513210!5m2!1sen!2sng"
         width="100%" 
-        height="100%" 
+        height="400" 
         style="border:0;" 
         allowfullscreen="" 
         loading="lazy">
@@ -95,9 +145,28 @@
   </section>
 
   <!-- Footer -->
-  <footer class="bg-blue-800 text-white py-6 text-center">
-    <p class="text-sm">&copy; 2025 Software Engineering Dept., FUTO. All Rights Reserved.</p>
+  <footer class="bg-dark-blue text-white py-8 mt-auto">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <div class="mb-4">
+        <h4 class="text-xl font-bold text-gold mb-2">Software Engineering Department</h4>
+        <p class="text-sm opacity-90">Federal University of Technology Owerri</p>
+      </div>
+      <div class="border-t border-blue-700 pt-4">
+        <p class="text-sm">&copy; 2025 Software Engineering Dept., FUTO. All Rights Reserved.</p>
+      </div>
+    </div>
   </footer>
+
+  <script>
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    function scrollToAbout() {
+      document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
 
 </body>
 </html>

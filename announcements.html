@@ -2,45 +2,180 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Announcements</title>
+  <title>Announcements | Software Engineering Department</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-blue': '#1e40af',
+            'dark-blue': '#1e3a8a', 
+            'gold': '#fbbf24',
+            'dark-gold': '#f59e0b'
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Preserve all existing JavaScript connections -->
   <script src="js/api.js" defer></script>
   <script src="js/auth.js" defer></script>
   <script src="js/announcements.js" defer></script>
 </head>
-<body class="bg-white text-gray-800 min-h-screen">
-  <header class="bg-blue-600 text-white p-4">
-    <div class="container mx-auto flex justify-between">
-      <a href="index.html" class="text-lg font-semibold">Dept Board</a>
-      <div>
-        <a href="events.html" class="mr-4">Events</a>
-        <a href="login.html" id="loginLink">Login</a>
-      </div>
+
+<body class="bg-white text-gray-800 min-h-screen font-inter flex flex-col">
+  <!-- Consistent Navigation Header -->
+  <header class="bg-dark-blue text-white p-4 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="index.html" class="text-xl font-bold text-gold hover:text-white transition-colors">Software Engineering Dept. | FUTO</a>
+      <nav class="hidden md:flex space-x-6">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="announcements.html" class="nav-link text-gold font-semibold">Announcements</a>
+        <a href="events.html" class="nav-link">Events</a>
+        <a href="archive.html" class="nav-link">Archives</a>
+        <a href="search.html" class="nav-link">Search</a>
+        <a href="staff.html" class="nav-link">Staff</a>
+        <a href="login.html" id="loginLink" class="nav-link">Login</a>
+      </nav>
+      <!-- Mobile menu button -->
+      <button class="md:hidden btn-spin text-gold" onclick="toggleMobileMenu()">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="md:hidden hidden mt-4 space-y-2">
+      <a href="index.html" class="block nav-link py-2">Home</a>
+      <a href="announcements.html" class="block nav-link text-gold font-semibold py-2">Announcements</a>
+      <a href="events.html" class="block nav-link py-2">Events</a>
+      <a href="archive.html" class="block nav-link py-2">Archives</a>
+      <a href="search.html" class="block nav-link py-2">Search</a>
+      <a href="staff.html" class="block nav-link py-2">Staff</a>
+      <a href="login.html" id="loginLinkMobile" class="block nav-link py-2">Login</a>
     </div>
   </header>
 
-  <main class="container mx-auto p-6">
-    <div id="adminControls" class="hidden mb-4">
-      <h3 class="text-xl font-semibold text-blue-700">Create Announcement</h3>
-      <form id="createForm" class="mt-2 space-y-2">
-        <input id="aTitle" class="w-full p-2 border rounded" placeholder="Title" required />
-        <textarea id="aContent" class="w-full p-2 border rounded" placeholder="Content" rows="4" required></textarea>
-        <div>
-          <button class="px-3 py-2 bg-blue-600 text-white rounded">Create</button>
-        </div>
-      </form>
+  <!-- Back Button -->
+  <div class="container mx-auto px-6 pt-6">
+    <a href="index.html" class="back-btn btn-spin">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+      Back to Home
+    </a>
+  </div>
+
+  <!-- Main Content -->
+  <main class="container mx-auto p-6 flex-1">
+    <!-- Page Header -->
+    <div class="text-center mb-8">
+      <h1 class="section-heading text-primary-blue">Department Announcements</h1>
+      <p class="text-gray-700 text-lg">Stay updated with the latest news and updates from our department</p>
     </div>
 
-    <section>
-      <h2 class="text-2xl font-bold mb-3">Announcements</h2>
-      <div id="list" class="space-y-4"></div>
+    <!-- Admin Controls (preserve existing functionality) -->
+    <div id="adminControls" class="hidden mb-8">
+      <div class="card max-w-2xl mx-auto">
+        <h3 class="text-xl font-semibold text-primary-blue mb-4 flex items-center">
+          <svg class="w-6 h-6 mr-2 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Create New Announcement
+        </h3>
+        <form id="createForm" class="space-y-4">
+          <div class="form-group">
+            <label class="form-label" for="aTitle">Announcement Title</label>
+            <input id="aTitle" class="form-input" placeholder="Enter announcement title" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="aContent">Content</label>
+            <textarea id="aContent" class="form-textarea" placeholder="Enter announcement content" rows="6" required></textarea>
+          </div>
+          <div class="flex justify-end">
+            <button type="submit" class="btn btn-spin">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              Create Announcement
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Announcements List Section -->
+    <section class="max-w-4xl mx-auto">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-primary-blue flex items-center">
+          <svg class="w-6 h-6 mr-2 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
+          </svg>
+          Latest Announcements
+        </h2>
+        <div class="loading hidden" id="loadingSpinner"></div>
+      </div>
+      
+      <!-- Announcements will be populated by JavaScript -->
+      <div id="list" class="space-y-6">
+        <!-- Loading placeholder -->
+        <div id="loadingPlaceholder" class="text-center py-8">
+          <div class="loading mx-auto mb-4"></div>
+          <p class="text-gray-500">Loading announcements...</p>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div id="emptyState" class="hidden text-center py-12">
+        <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
+        </svg>
+        <h3 class="text-lg font-semibold text-gray-500 mb-2">No announcements yet</h3>
+        <p class="text-gray-400">Check back later for updates from the department.</p>
+      </div>
     </section>
   </main>
 
+  <!-- Footer -->
+  <footer class="bg-dark-blue text-white py-8 mt-auto">
+    <div class="container mx-auto px-6 text-center">
+      <div class="mb-4">
+        <h4 class="text-xl font-bold text-gold mb-2">Software Engineering Department</h4>
+        <p class="text-sm opacity-90">Federal University of Technology Owerri</p>
+      </div>
+      <div class="border-t border-blue-700 pt-4">
+        <p class="text-sm">&copy; 2025 Software Engineering Dept., FUTO. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
   <script>
-    // small styling helper for gold button, minimal inline
-    const goldStyle = "background:#D4AF37;color:white;padding:.5rem 1rem;border-radius:.375rem";
+    // Preserve existing styling helper for gold button
+    const goldStyle = "background:#fbbf24;color:#1e40af;padding:.75rem 1.5rem;border-radius:.5rem;font-weight:600;transition:all 0.3s ease";
+    
+    // Mobile menu toggle function
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    // Hide loading placeholder when content loads
+    document.addEventListener('DOMContentLoaded', function() {
+      // This can be called by your existing JS when announcements are loaded
+      window.hideLoadingPlaceholder = function() {
+        document.getElementById('loadingPlaceholder').style.display = 'none';
+      };
+      
+      // Show empty state if no announcements
+      window.showEmptyState = function() {
+        document.getElementById('emptyState').classList.remove('hidden');
+      };
+    });
   </script>
 </body>
 </html>

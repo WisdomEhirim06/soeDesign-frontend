@@ -2,215 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Archive | Software Engineering Department</title>
+  <title>Archives | Software Engineering Department</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="styles.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    // Mobile menu toggle function
-    function toggleMobileMenu() {
-      const menu = document.getElementById('mobile-menu');
-      menu.classList.toggle('hidden');
-    }
-
-    // Filter application
-    function applyFilters() {
-      const contentType = document.getElementById('contentTypeFilter').value;
-      const year = document.getElementById('yearFilter').value;
-      
-      // Show loading state
-      showLoadingState();
-      
-      // Your existing archive.js will handle the actual filtering
-      // This provides visual feedback
-      console.log('Filtering by:', { contentType, year });
-      
-      // Example integration point for your archive.js
-      if (typeof filterArchiveContent === 'function') {
-        filterArchiveContent(contentType, year);
-      }
-    }
-
-    // Archive management functions
-    document.addEventListener('DOMContentLoaded', function() {
-      // Helper functions for JavaScript integration
-      window.hideLoadingPlaceholder = function() {
-        document.getElementById('loadingPlaceholder').style.display = 'none';
-      };
-      
-      window.showEmptyState = function() {
-        document.getElementById('emptyState').classList.remove('hidden');
-      };
-
-      window.showLoadingState = function() {
-        document.getElementById('loadingSpinner').classList.remove('hidden');
-      };
-
-      window.hideLoadingState = function() {
-        document.getElementById('loadingSpinner').classList.add('hidden');
-      };
-
-      // Update statistics
-      window.updateArchiveStats = function(stats) {
-        document.getElementById('totalAnnouncements').textContent = stats.announcements || 0;
-        document.getElementById('totalEvents').textContent = stats.events || 0;
-        document.getElementById('totalDocuments').textContent = stats.documents || 0;
-        document.getElementById('archiveAge').textContent = stats.yearsActive || 0;
-      };
-
-      // Update item count
-      window.updateItemCount = function(count, total) {
-        const countElement = document.getElementById('itemCount');
-        if (total) {
-          countElement.textContent = `Showing ${count} of ${total} items`;
-        } else {
-          countElement.textContent = `${count} items found`;
-        }
-      };
-
-      // Pagination functions
-      window.showPagination = function(currentPage, totalPages) {
-        const pagination = document.getElementById('pagination');
-        const pageNumbers = document.getElementById('pageNumbers');
-        const prevButton = document.getElementById('prevPage');
-        const nextButton = document.getElementById('nextPage');
-
-        if (totalPages <= 1) {
-          pagination.classList.add('hidden');
-          return;
-        }
-
-        pagination.classList.remove('hidden');
-        
-        // Update prev/next buttons
-        prevButton.disabled = currentPage <= 1;
-        nextButton.disabled = currentPage >= totalPages;
-        
-        // Generate page numbers
-        pageNumbers.innerHTML = '';
-        for (let i = 1; i <= totalPages; i++) {
-          const button = document.createElement('button');
-          button.className = `px-3 py-2 text-sm border ${
-            i === currentPage 
-              ? 'bg-gold text-primary-blue border-gold' 
-              : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-50'
-          }`;
-          button.textContent = i;
-          button.onclick = () => goToPage(i);
-          pageNumbers.appendChild(button);
-        }
-      };
-
-      // Page navigation
-      window.goToPage = function(page) {
-        // Your archive.js should handle the actual page change
-        console.log('Going to page:', page);
-        if (typeof loadArchivePage === 'function') {
-          loadArchivePage(page);
-        }
-      };
-
-      // Initialize pagination button handlers
-      document.getElementById('prevPage').addEventListener('click', function() {
-        if (typeof getCurrentPage === 'function' && typeof goToPage === 'function') {
-          const currentPage = getCurrentPage();
-          if (currentPage > 1) goToPage(currentPage - 1);
-        }
-      });
-
-      document.getElementById('nextPage').addEventListener('click', function() {
-        if (typeof getCurrentPage === 'function' && typeof getTotalPages === 'function' && typeof goToPage === 'function') {
-          const currentPage = getCurrentPage();
-          const totalPages = getTotalPages();
-          if (currentPage < totalPages) goToPage(currentPage + 1);
-        }
-      });
-
-      // Archive item creation helper
-      window.createArchiveItem = function(item) {
-        const itemElement = document.createElement('div');
-        itemElement.className = 'list-item';
-        
-        const typeIcon = getTypeIcon(item.type);
-        const formattedDate = new Date(item.date).toLocaleDateString();
-        
-        itemElement.innerHTML = `
-          <div class="flex items-start space-x-4">
-            <div class="flex-shrink-0">
-              ${typeIcon}
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between mb-2">
-                <h3 class="text-lg font-semibold text-primary-blue truncate">${item.title}</h3>
-                <div class="flex items-center space-x-2 text-sm text-gray-500">
-                  <span class="px-2 py-1 bg-gray-100 rounded text-xs">${item.type}</span>
-                  <span>${formattedDate}</span>
-                </div>
-              </div>
-              <p class="text-gray-700 text-sm line-clamp-2 mb-2">${item.description || item.content || 'No description available'}</p>
-              <div class="flex items-center justify-between">
-                <div class="text-xs text-gray-500">
-                  Archived: ${new Date(item.archivedDate).toLocaleDateString()}
-                </div>
-                <button class="text-gold hover:text-dark-gold text-sm font-medium" onclick="viewArchiveItem('${item.id}')">
-                  View Details →
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-        
-        return itemElement;
-      };
-
-      // Get icon for content type
-      function getTypeIcon(type) {
-        const icons = {
-          'announcement': `<svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
-          </svg>`,
-          'event': `<svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h.757l1.707-1.707A1 1 0 0120 6.828V17a1 1 0 01-1 1H5a1 1 0 01-1-1V6.828a1 1 0 01.536-.894L6.243 7H8z"></path>
-          </svg>`,
-          'document': `<svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.464-.881-6.08-2.33C5.54 12.123 5 11.438 5 10.5V7a2 2 0 012-2h10a2 2 0 012 2v3.5c0 .938-.54 1.623-.92 2.17A7.962 7.962 0 0112 15z"></path>
-          </svg>`,
-          'news': `<svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
-          </svg>`
-        };
-        
-        return icons[type] || icons['document'];
-      }
-
-      // View archive item details
-      window.viewArchiveItem = function(itemId) {
-        // Your archive.js should handle showing item details
-        console.log('Viewing archive item:', itemId);
-        if (typeof showArchiveItemDetails === 'function') {
-          showArchiveItemDetails(itemId);
-        }
-      };
-
-      // Initialize with sample statistics (remove when real data is available)
-      updateArchiveStats({
-        announcements: 0,
-        events: 0,
-        documents: 0,
-        yearsActive: 0
-      });
-    });
-  </script>
-</body>
-</html>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
             'primary-blue': '#1e40af',
-            'dark-blue': '#1e3a8a', 
+            'dark-blue': '#1e3a8a',
             'gold': '#fbbf24',
             'dark-gold': '#f59e0b'
           }
@@ -218,13 +22,13 @@
       }
     }
   </script>
-  <!-- Preserve existing JavaScript connections -->
+  <!-- Keep existing JS connections -->
   <script src="js/api.js" defer></script>
   <script src="js/archive.js" defer></script>
 </head>
 
 <body class="bg-white text-gray-800 min-h-screen font-inter flex flex-col">
-  <!-- Consistent Navigation Header -->
+  <!-- Header -->
   <header class="bg-dark-blue text-white p-4 shadow-lg">
     <div class="container mx-auto flex justify-between items-center">
       <a href="index.html" class="text-xl font-bold text-gold hover:text-white transition-colors">Software Engineering Dept. | FUTO</a>
@@ -236,7 +40,7 @@
         <a href="search.html" class="nav-link">Search</a>
         <a href="staff.html" class="nav-link">Staff</a>
       </nav>
-      <!-- Mobile menu button -->
+      <!-- Mobile menu toggle -->
       <button class="md:hidden btn-spin text-gold" onclick="toggleMobileMenu()">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -256,8 +60,8 @@
 
   <!-- Back Button -->
   <div class="container mx-auto px-6 pt-6">
-    <a href="index.html" class="back-btn btn-spin">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <a href="index.html" class="back-btn btn-spin inline-flex items-center">
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
       </svg>
       Back to Home
@@ -266,20 +70,19 @@
 
   <!-- Main Content -->
   <main class="container mx-auto p-6 flex-1">
-    <!-- Page Header -->
     <div class="text-center mb-8">
       <h1 class="section-heading text-primary-blue">Department Archives</h1>
-      <p class="text-gray-700 text-lg">Access historical announcements, events, and archived content</p>
+      <p class="text-gray-700 text-lg">Explore historical announcements, events, and important departmental records</p>
     </div>
 
-    <!-- Archive Filters -->
+    <!-- Filters -->
     <div class="max-w-4xl mx-auto mb-8">
-      <div class="bg-gray-50 rounded-lg p-6">
+      <div class="bg-gray-50 rounded-lg p-6 shadow">
         <h3 class="text-lg font-semibold text-primary-blue mb-4">Filter Archives</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Content Type</label>
-            <select class="form-select" id="contentTypeFilter">
+            <select class="form-select w-full" id="contentTypeFilter">
               <option value="all">All Content</option>
               <option value="announcements">Announcements</option>
               <option value="events">Events</option>
@@ -289,7 +92,7 @@
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Year</label>
-            <select class="form-select" id="yearFilter">
+            <select class="form-select w-full" id="yearFilter">
               <option value="all">All Years</option>
               <option value="2025">2025</option>
               <option value="2024">2024</option>
@@ -301,7 +104,7 @@
           <div class="flex items-end">
             <button class="btn btn-spin w-full" onclick="applyFilters()">
               <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18M3 10h18M3 16h18"></path>
               </svg>
               Apply Filters
             </button>
@@ -310,95 +113,58 @@
       </div>
     </div>
 
-    <!-- Archive List Section -->
+    <!-- Archive List -->
     <section class="max-w-6xl mx-auto">
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold text-primary-blue flex items-center">
           <svg class="w-6 h-6 mr-2 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14"></path>
           </svg>
           Archived Items
         </h2>
         <div class="flex items-center space-x-4">
           <div class="loading hidden" id="loadingSpinner"></div>
-          <div class="text-sm text-gray-500" id="itemCount">
-            <!-- Item count will be updated by JavaScript -->
-          </div>
+          <div class="text-sm text-gray-500" id="itemCount"></div>
         </div>
       </div>
-      
-      <!-- Archive items will be populated by JavaScript -->
       <div id="archiveList" class="space-y-4">
-        <!-- Loading placeholder -->
         <div id="loadingPlaceholder" class="text-center py-12">
           <div class="loading mx-auto mb-4"></div>
           <p class="text-gray-500">Loading archived content...</p>
         </div>
       </div>
-
-      <!-- Empty state -->
       <div id="emptyState" class="hidden text-center py-16">
-        <svg class="w-20 h-20 mx-auto text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"></path>
-        </svg>
         <h3 class="text-xl font-semibold text-gray-500 mb-3">No archived content found</h3>
         <p class="text-gray-400 text-lg">Try adjusting your filters or check back later.</p>
       </div>
-
       <!-- Pagination -->
       <div id="pagination" class="hidden mt-8 flex justify-center">
         <nav class="flex items-center space-x-1">
-          <button class="px-3 py-2 text-sm text-gray-500 bg-white border border-gray-300 rounded-l hover:bg-gray-50 disabled:opacity-50" id="prevPage" disabled>
-            Previous
-          </button>
+          <button class="px-3 py-2 text-sm text-gray-500 bg-white border border-gray-300 rounded-l hover:bg-gray-50 disabled:opacity-50 btn-spin" id="prevPage" disabled>Previous</button>
           <div id="pageNumbers" class="flex"></div>
-          <button class="px-3 py-2 text-sm text-gray-500 bg-white border border-gray-300 rounded-r hover:bg-gray-50 disabled:opacity-50" id="nextPage">
-            Next
-          </button>
+          <button class="px-3 py-2 text-sm text-gray-500 bg-white border border-gray-300 rounded-r hover:bg-gray-50 disabled:opacity-50 btn-spin" id="nextPage">Next</button>
         </nav>
       </div>
     </section>
 
-    <!-- Archive Statistics -->
+    <!-- Stats -->
     <div class="mt-12 max-w-6xl mx-auto">
-      <div class="bg-gradient-to-r from-primary-blue to-dark-blue text-white rounded-lg p-8">
+      <div class="bg-gradient-to-r from-primary-blue to-dark-blue text-white rounded-lg p-8 shadow">
         <h3 class="text-xl font-bold text-gold mb-6 text-center">Archive Statistics</h3>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-          <div>
-            <div class="text-3xl font-bold text-gold mb-2" id="totalAnnouncements">-</div>
-            <p class="text-sm opacity-90">Total Announcements</p>
-          </div>
-          <div>
-            <div class="text-3xl font-bold text-gold mb-2" id="totalEvents">-</div>
-            <p class="text-sm opacity-90">Total Events</p>
-          </div>
-          <div>
-            <div class="text-3xl font-bold text-gold mb-2" id="totalDocuments">-</div>
-            <p class="text-sm opacity-90">Documents</p>
-          </div>
-          <div>
-            <div class="text-3xl font-bold text-gold mb-2" id="archiveAge">-</div>
-            <p class="text-sm opacity-90">Years of Archives</p>
-          </div>
+          <div><div class="text-3xl font-bold text-gold mb-2" id="totalAnnouncements">-</div><p>Total Announcements</p></div>
+          <div><div class="text-3xl font-bold text-gold mb-2" id="totalEvents">-</div><p>Total Events</p></div>
+          <div><div class="text-3xl font-bold text-gold mb-2" id="totalDocuments">-</div><p>Documents</p></div>
+          <div><div class="text-3xl font-bold text-gold mb-2" id="archiveAge">-</div><p>Years of Archives</p></div>
         </div>
       </div>
     </div>
 
-    <!-- Archive Information -->
+    <!-- Info -->
     <div class="mt-8 max-w-4xl mx-auto">
-      <div class="bg-gray-50 rounded-lg p-6">
-        <h3 class="text-lg font-semibold text-primary-blue mb-4 flex items-center">
-          <svg class="w-5 h-5 mr-2 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          About Our Archives
-        </h3>
-        <div class="text-sm text-gray-600 space-y-2">
-          <p>• Our archive contains historical announcements, events, and important documents from the department</p>
-          <p>• Content is automatically archived after a certain period to maintain current relevance on main pages</p>
-          <p>• Use the search function to find specific archived content quickly</p>
-          <p>• All archived content is preserved and remains accessible for reference</p>
-        </div>
+      <div class="bg-gray-50 rounded-lg p-6 shadow">
+        <h3 class="text-lg font-semibold text-primary-blue mb-4">About Our Archives</h3>
+        <p class="text-sm text-gray-600">Our archive stores historical announcements, events, and departmental documents. Old content is preserved here for reference, while newer updates remain on the main pages. Use the filters or search to find what you need.</p>
       </div>
     </div>
   </main>
@@ -406,14 +172,12 @@
   <!-- Footer -->
   <footer class="bg-dark-blue text-white py-8 mt-auto">
     <div class="container mx-auto px-6 text-center">
-      <div class="mb-4">
-        <h4 class="text-xl font-bold text-gold mb-2">Software Engineering Department</h4>
-        <p class="text-sm opacity-90">Federal University of Technology Owerri</p>
-      </div>
-      <div class="border-t border-blue-700 pt-4">
+      <h4 class="text-xl font-bold text-gold mb-2">Software Engineering Department</h4>
+      <p class="text-sm opacity-90">Federal University of Technology Owerri</p>
+      <div class="border-t border-blue-700 pt-4 mt-4">
         <p class="text-sm">&copy; 2025 Software Engineering Dept., FUTO. All Rights Reserved.</p>
       </div>
     </div>
   </footer>
-
-  <script>
+</body>
+</html>

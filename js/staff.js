@@ -1,9 +1,9 @@
 // Static staff rendering (simple array). Adjust pictures in images/staff/
 document.addEventListener("DOMContentLoaded", () => {
     const staff = [
-      { name: "Dr. Ada Example", role: "Head of Department", img: "images/staff/ada.jpg" },
-      { name: "Mr. John Doe", role: "Lecturer", img: "images/staff/john.jpg" },
-      { name: "Mrs. Jane Smith", role: "Secretary", img: "images/staff/jane.jpg" },
+      { name: "Dr. Ikerionwu Charles", role: "Head of Department", img: "images/hod.jpg" },
+      { name: "Dr Caesar Nwandu", role: "Course Advisor", img: "images/gallery2.jpg" },
+      { name: "Dr Aguwa", role: "Lecturer", img: "images/drAguwa.jpg" },
     ];
   
     const el = document.getElementById("staffList");
